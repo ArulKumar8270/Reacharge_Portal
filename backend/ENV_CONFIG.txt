@@ -1,0 +1,42 @@
+# Backend Environment Configuration
+# Copy this content to create a .env file in the backend directory
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/nexus
+
+# JWT
+JWT_SECRET=your_jwt_secret_key_here_change_this_in_production
+JWT_EXPIRES_IN=7d
+
+# Admin
+ADMIN_EMAIL=admin@nexus.com
+ADMIN_PASSWORD=admin123
+
+# Payment Gateway - Razorpay
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+
+# Payment Gateway - Paytm (Optional)
+PAYTM_MERCHANT_ID=your_paytm_merchant_id
+PAYTM_MERCHANT_KEY=your_paytm_merchant_key
+
+# Payment Gateway - Cashfree (Optional)
+CASHFREE_APP_ID=your_cashfree_app_id
+CASHFREE_SECRET_KEY=your_cashfree_secret_key
+
+# BBPS API (Utility Bill Payments)
+BBPS_API_KEY=your_bbps_api_key
+BBPS_API_URL=https://api.bbps.example.com
+
+# Recharge API
+RECHARGE_API_KEY=your_recharge_api_key
+RECHARGE_API_URL=https://api.recharge.example.com
+
+# SMS Gateway
+SMS_API_KEY=your_sms_api_key
+SMS_API_URL=https://api.sms.example.com
+
