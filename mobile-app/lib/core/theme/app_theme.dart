@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Modern Color Palette - Orange Gradient Theme
-  static const Color primaryColor = Color(0xFFF97316); // Vibrant Orange
-  static const Color secondaryColor = Color(0xFFFB923C); // Light Orange/Amber
-  static const Color accentColor = Color(0xFFEA580C); // Deep Orange
+  // Modern Color Palette - Light Blue Theme (Matching Design)
+  static const Color primaryColor = Color(0xFF2196F3); // Blue
+  static const Color secondaryColor = Color(0xFF64B5F6); // Light Blue
+  static const Color accentColor = Color(0xFF1976D2); // Dark Blue
   static const Color errorColor = Color(0xFFEF4444); // Red
-  static const Color warningColor = Color(0xFFF59E0B); // Amber
-  static const Color successColor = Color(0xFF10B981); // Green
-  static const Color infoColor = Color(0xFFF97316); // Orange
-  static const Color backgroundColor = Color(0xFFFFF7ED); // Warm White/Orange Tint
+  static const Color warningColor = Color(0xFFFF9800); // Orange
+  static const Color successColor = Color(0xFF4CAF50); // Green
+  static const Color infoColor = Color(0xFF2196F3); // Blue
+  static const Color backgroundColor = Color(0xFFE3F2FD); // Light Blue Background
   static const Color surfaceColor = Color(0xFFFFFFFF); // White
-  static const Color textPrimary = Color(0xFF0F172A); // Dark Slate
-  static const Color textSecondary = Color(0xFF64748B); // Slate Gray
+  static const Color textPrimary = Color(0xFF212121); // Dark Gray
+  static const Color textSecondary = Color(0xFF757575); // Gray
   
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,

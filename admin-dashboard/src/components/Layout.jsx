@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { LogOut, LayoutDashboard, Users, Package, ShoppingCart, CreditCard, BarChart3, FolderTree } from 'lucide-react'
+import { LogOut, LayoutDashboard, Users, Package, ShoppingCart, CreditCard, BarChart3, FolderTree, Smartphone } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Layout() {
@@ -20,6 +20,7 @@ export default function Layout() {
     { path: '/products', label: 'Products', icon: Package },
     { path: '/categories', label: 'Categories', icon: FolderTree },
     { path: '/orders', label: 'Orders', icon: ShoppingCart },
+    { path: '/shop-config', label: 'Shop Page (App)', icon: Smartphone },
     { path: '/transactions', label: 'Transactions', icon: CreditCard },
     { path: '/reports', label: 'Reports', icon: BarChart3 },
   ]

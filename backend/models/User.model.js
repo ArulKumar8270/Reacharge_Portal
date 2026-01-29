@@ -44,6 +44,14 @@ const userSchema = new mongoose.Schema(
     otpExpires: {
       type: Date,
     },
+    // Address (optional)
+    addressLine1: { type: String, trim: true },
+    addressLine2: { type: String, trim: true },
+    city: { type: String, trim: true },
+    state: { type: String, trim: true },
+    pincode: { type: String, trim: true },
+    // Account info (optional, e.g. referral code - often read-only)
+    referralCode: { type: String, trim: true },
   },
   {
     timestamps: true,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/config/app_config.dart';
 
 class RechargePage extends StatelessWidget {
   const RechargePage({super.key});
@@ -7,52 +8,100 @@ class RechargePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Recharge')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+      backgroundColor: const Color(0xFFE3F2FD), // Light blue background
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Mobile Recharge & More',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            // White Header Bar
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Color(0xFF212121)),
+                    onPressed: () => context.pop(),
+                  ),
+                  const Expanded(
+                    child: Text(
+                      'Recharge',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF212121),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.dark_mode_outlined, color: Color(0xFF757575)),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 1.2,
-              children: [
-                _RechargeCard(
-                  title: 'Mobile',
-                  icon: Icons.phone_android,
-                  color: Colors.green,
-                  onTap: () => context.push('/recharge/mobile'),
+            
+            // Main Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Mobile Recharge & More',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF212121),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.2,
+                      children: [
+                        _RechargeCard(
+                          title: 'Mobile',
+                          icon: Icons.phone_android,
+                          color: const Color(0xFF4CAF50),
+                          onTap: () => context.push('/recharge/mobile'),
+                        ),
+                        _RechargeCard(
+                          title: 'DTH',
+                          icon: Icons.tv,
+                          color: const Color(0xFF2196F3),
+                          onTap: () => context.push('/recharge/dth'),
+                        ),
+                        _RechargeCard(
+                          title: 'Fastag',
+                          icon: Icons.local_gas_station,
+                          color: const Color(0xFFFF9800),
+                          onTap: () => context.push('/recharge/fastag'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () => context.push('/wallet'),
+                      icon: const Icon(Icons.account_balance_wallet),
+                      label: const Text('Go to Wallet'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2196F3),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                    ),
+                  ],
                 ),
-                _RechargeCard(
-                  title: 'DTH',
-                  icon: Icons.tv,
-                  color: Theme.of(context).colorScheme.primary,
-                  onTap: () => context.push('/recharge/dth'),
-                ),
-                _RechargeCard(
-                  title: 'Fastag',
-                  icon: Icons.local_gas_station,
-                  color: Colors.orange,
-                  onTap: () => context.push('/recharge/fastag'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => context.push('/wallet'),
-              icon: const Icon(Icons.account_balance_wallet),
-              label: const Text('Go to Wallet'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
               ),
             ),
           ],
@@ -78,12 +127,20 @@ class _RechargeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.withOpacity(0.1)),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -94,6 +151,7 @@ class _RechargeCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: Color(0xFF212121),
                 ),
               ),
             ],
@@ -103,4 +161,3 @@ class _RechargeCard extends StatelessWidget {
     );
   }
 }
-

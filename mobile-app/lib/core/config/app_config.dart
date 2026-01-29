@@ -1,9 +1,10 @@
 class AppConfig {
-  static const String appName = 'Nexus';
+  static const String appName = 'Nexus MI';
   static const String appVersion = '1.0.0';
   
   // API Configuration
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'https://nicknameinfo.net/Reacharge_Portal/api';
+  // static const String baseUrl = 'http://localhost:10001/api';
   static const String apiVersion = 'v1';
   
   // Payment Gateway Keys (Replace with actual keys)

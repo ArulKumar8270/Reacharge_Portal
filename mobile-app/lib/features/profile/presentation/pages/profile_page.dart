@@ -24,6 +24,199 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  void _showEditProfileSheet(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final user = authProvider.user;
+    if (user == null) return;
+    final nameController = TextEditingController(text: user.name);
+    final emailController = TextEditingController(text: user.email);
+    final phoneController = TextEditingController(text: user.phoneNumber);
+    final addressLine1Controller = TextEditingController(text: user.addressLine1 ?? '');
+    final addressLine2Controller = TextEditingController(text: user.addressLine2 ?? '');
+    final cityController = TextEditingController(text: user.city ?? '');
+    final stateController = TextEditingController(text: user.state ?? '');
+    final pincodeController = TextEditingController(text: user.pincode ?? '');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+        child: Container(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.85),
+          padding: const EdgeInsets.all(24),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Edit profile', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF212121))),
+                  IconButton(onPressed: () => Navigator.pop(ctx), icon: const Icon(Icons.close, color: Color(0xFF757575))),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF2196F3)),
+                        ),
+                        textCapitalization: TextCapitalization.words,
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF2196F3)),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: phoneController,
+                        decoration: InputDecoration(
+                          labelText: 'Phone Number',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.phone_outlined, color: Color(0xFF2196F3)),
+                        ),
+                        keyboardType: TextInputType.phone,
+                        autocorrect: false,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Address', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF212121))),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: addressLine1Controller,
+                        decoration: InputDecoration(
+                          labelText: 'Address line 1',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.home_outlined, color: Color(0xFF2196F3)),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: addressLine2Controller,
+                        decoration: InputDecoration(
+                          labelText: 'Address line 2 (optional)',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: cityController,
+                              decoration: InputDecoration(
+                                labelText: 'City',
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextField(
+                              controller: stateController,
+                              decoration: InputDecoration(
+                                labelText: 'State',
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: pincodeController,
+                        decoration: InputDecoration(
+                          labelText: 'Pincode',
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.pin_drop_outlined, color: Color(0xFF2196F3)),
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+              Consumer<AuthProvider>(
+                builder: (context, auth, _) {
+                  return SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: auth.isLoading
+                          ? null
+                          : () async {
+                              final name = nameController.text.trim();
+                              final email = emailController.text.trim();
+                              final phone = phoneController.text.trim();
+                              if (name.isEmpty || email.isEmpty) {
+                                ScaffoldMessenger.of(ctx).showSnackBar(
+                                  const SnackBar(content: Text('Name and email are required'), behavior: SnackBarBehavior.floating),
+                                );
+                                return;
+                              }
+                              if (phone.isEmpty) {
+                                ScaffoldMessenger.of(ctx).showSnackBar(
+                                  const SnackBar(content: Text('Phone number is required'), behavior: SnackBarBehavior.floating),
+                                );
+                                return;
+                              }
+                              final ok = await auth.updateProfile({
+                                'name': name,
+                                'email': email,
+                                'phoneNumber': phone,
+                                'addressLine1': addressLine1Controller.text.trim().isEmpty ? null : addressLine1Controller.text.trim(),
+                                'addressLine2': addressLine2Controller.text.trim().isEmpty ? null : addressLine2Controller.text.trim(),
+                                'city': cityController.text.trim().isEmpty ? null : cityController.text.trim(),
+                                'state': stateController.text.trim().isEmpty ? null : stateController.text.trim(),
+                                'pincode': pincodeController.text.trim().isEmpty ? null : pincodeController.text.trim(),
+                              });
+                              if (!ctx.mounted) return;
+                              Navigator.pop(ctx);
+                              if (ok) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Profile updated'), backgroundColor: Color(0xFF4CAF50), behavior: SnackBarBehavior.floating),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(auth.error ?? 'Update failed'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
+                                );
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2196F3),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: auth.isLoading ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Text('Save'),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _handleLogout(BuildContext context) async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await authProvider.logout();
@@ -34,9 +227,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Scaffold(
+      backgroundColor: const Color(0xFFE3F2FD), // Light blue background
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
           final user = authProvider.user;
@@ -48,262 +240,274 @@ class _ProfilePageState extends State<ProfilePage> {
           }
           
           // Show user profile if authenticated
-          return CustomScrollView(
-            slivers: [
-              // Modern App Bar with gradient
-              SliverAppBar(
-                expandedHeight: 200,
-                floating: false,
-                pinned: true,
-                elevation: 0,
-                backgroundColor: theme.colorScheme.primary,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          theme.colorScheme.primary,
-                          theme.colorScheme.secondary,
-                        ],
-                      ),
+          return Column(
+            children: [
+              // White Header Bar
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Color(0xFF212121)),
+                      onPressed: () => context.pop(),
                     ),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Profile Avatar
-                            Stack(
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 4,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 48,
-                                    backgroundColor: Colors.white,
-                                    backgroundImage: user?.profileImage != null
-                                        ? NetworkImage(user!.profileImage!)
-                                        : null,
-                                    child: user?.profileImage == null
-                                        ? Icon(
-                                            Icons.person_rounded,
-                                            size: 50,
-                                            color: theme.colorScheme.primary,
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                                if (user?.isVerified == true)
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.verified,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              user?.name ?? 'Loading...',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            if (user?.email != null) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                user!.email,
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.9),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                            if (user?.phoneNumber != null) ...[
-                              const SizedBox(height: 4),
-                              Text(
-                                user!.phoneNumber,
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ],
+                    const Expanded(
+                      child: Text(
+                        'Profile',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF212121),
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
+                    IconButton(
+                      icon: const Icon(Icons.dark_mode_outlined, color: Color(0xFF757575)),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
               ),
               
               // Profile Content
-              SliverToBoxAdapter(
-                child: Padding(
+              Expanded(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Account Info Section
-                      _SectionHeader(
-                        title: 'Account Information',
-                        icon: Icons.person_outline_rounded,
+                      // Profile Icon
+                      Center(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2196F3),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 12),
-                      _InfoCard(
-                        icon: Icons.email_outlined,
-                        title: 'Email',
-                        value: user?.email ?? 'N/A',
-                        color: const Color(0xFFF97316),
-                      ),
-                      _InfoCard(
-                        icon: Icons.phone_outlined,
-                        title: 'Phone',
-                        value: user?.phoneNumber ?? 'N/A',
-                        color: const Color(0xFF10B981),
-                      ),
-                      if (user?.createdAt != null)
-                      _InfoCard(
-                        icon: Icons.calendar_today_outlined,
-                        title: 'Member Since',
-                        value: DateFormat('MMM yyyy').format(user!.createdAt),
-                        color: const Color(0xFFFB923C),
-                      ),
-                      
-                      const SizedBox(height: 32),
-                      
-                      // Quick Actions Section
-                      _SectionHeader(
-                        title: 'Quick Actions',
-                        icon: Icons.dashboard_outlined,
-                      ),
-                      const SizedBox(height: 12),
-                      _ModernProfileMenuItem(
-                        icon: Icons.shopping_cart_outlined,
-                        title: 'My Orders',
-                        subtitle: 'View your order history',
-                        color: const Color(0xFFF97316),
-                        onTap: () => context.push('/orders'),
-                      ),
-                      _ModernProfileMenuItem(
-                        icon: Icons.account_balance_wallet_outlined,
-                        title: 'Wallet',
-                        subtitle: 'Manage your wallet',
-                        color: const Color(0xFFFB923C),
-                        onTap: () => context.push('/wallet'),
-                      ),
-                      _ModernProfileMenuItem(
-                        icon: Icons.receipt_long_outlined,
-                        title: 'Transaction History',
-                        subtitle: 'View all transactions',
-                        color: const Color(0xFF10B981),
-                        onTap: () => context.push('/wallet/transactions'),
-                      ),
-                      
-                      const SizedBox(height: 32),
-                      
-                      // Services Section
-                      _SectionHeader(
-                        title: 'Services',
-                        icon: Icons.apps_outlined,
-                      ),
-                      const SizedBox(height: 12),
-                      _ModernProfileMenuItem(
-                        icon: Icons.shopping_bag_outlined,
-                        title: 'Products',
-                        subtitle: 'Browse products',
-                        color: const Color(0xFFF97316),
-                        onTap: () => context.push('/products'),
-                      ),
-                      _ModernProfileMenuItem(
-                        icon: Icons.phone_android_outlined,
-                        title: 'Recharge',
-                        subtitle: 'Mobile & DTH recharge',
-                        color: const Color(0xFF10B981),
-                        onTap: () => context.push('/recharge'),
-                      ),
-                      _ModernProfileMenuItem(
-                        icon: Icons.receipt_outlined,
-                        title: 'Bills',
-                        subtitle: 'Pay utility bills',
-                        color: const Color(0xFFF59E0B),
-                        onTap: () => context.push('/bills'),
-                      ),
-                      
-                      const SizedBox(height: 32),
-                      
-                      // Account Actions
-                      _SectionHeader(
-                        title: 'Account',
-                        icon: Icons.settings_outlined,
-                      ),
-                      const SizedBox(height: 12),
-                      _ModernProfileMenuItem(
-                        icon: Icons.settings_outlined,
-                        title: 'Settings',
-                        subtitle: 'App preferences',
-                        color: const Color(0xFF6B7280),
-                        onTap: () {
-                          // TODO: Implement settings
-                        },
-                      ),
-                      _ModernProfileMenuItem(
-                        icon: Icons.help_outline,
-                        title: 'Help & Support',
-                        subtitle: 'Get assistance',
-                        color: const Color(0xFF6B7280),
-                        onTap: () {
-                          // TODO: Implement help
-                        },
-                      ),
-                      _ModernProfileMenuItem(
-                        icon: Icons.info_outline,
-                        title: 'About',
-                        subtitle: 'App version & info',
-                        color: const Color(0xFF6B7280),
-                        onTap: () {
-                          // TODO: Implement about
-                        },
-                      ),
-                      
                       const SizedBox(height: 24),
                       
-                      // Logout Button
-                      _LogoutButton(
-                        onTap: () => _handleLogout(context),
+                      // Complete KYC Card
+                      Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF2196F3),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Complete KYC',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF212121),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                      'Unlock Unlimited Recharges',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xFF757575),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Used ₹0.00',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF757575),
+                                          ),
+                                        ),
+                                        const Text(
+                                          'of ₹10,000.00',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Color(0xFF757575),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: 0.0,
+                                        backgroundColor: Colors.grey[200],
+                                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
+                                        minHeight: 6,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                Icons.chevron_right,
+                                color: Color(0xFF757575),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      
+                      // Personal Info Section
+                      Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Personal Info',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF212121),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => _showEditProfileSheet(context),
+                                    child: const Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        color: Color(0xFF2196F3),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              _InfoRow(
+                                icon: Icons.person_outline,
+                                label: 'Name',
+                                value: user?.name ?? 'N/A',
+                              ),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.phone_outlined,
+                                label: 'Phone Number',
+                                value: user?.phoneNumber ?? 'N/A',
+                              ),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.email_outlined,
+                                label: 'E-Mail',
+                                value: user?.email ?? 'N/A',
+                              ),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.home_outlined,
+                                label: 'Address',
+                                value: user?.formattedAddress ?? 'N/A',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      
+                      // Account Info Section
+                      Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Account Info',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF212121),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              _InfoRow(
+                                icon: Icons.alternate_email,
+                                label: 'Referral Id',
+                                value: user?.referralCode ?? 'N/A',
+                              ),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.phone_outlined,
+                                label: 'Phone Verification',
+                                value: 'Verified',
+                                valueColor: const Color(0xFF4CAF50),
+                              ),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.email_outlined,
+                                label: 'E-Mail Verification',
+                                value: 'Pending',
+                                valueColor: const Color(0xFFFF9800),
+                              ),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.fingerprint_outlined,
+                                label: 'E-KYC',
+                                value: 'Pending',
+                                valueColor: const Color(0xFFFF9800),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       
                       const SizedBox(height: 32),
@@ -319,22 +523,64 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color? valueColor;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color: const Color(0xFF2196F3),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF757575),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: valueColor ?? const Color(0xFF212121),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _LoginPrompt extends StatelessWidget {
   const _LoginPrompt();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-          ],
-        ),
-      ),
+      color: const Color(0xFFE3F2FD), // Light blue background
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -398,249 +644,3 @@ class _LoginPrompt extends StatelessWidget {
     );
   }
 }
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  final IconData icon;
-
-  const _SectionHeader({
-    required this.title,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            icon,
-            size: 20,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF111827),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-  final Color color;
-
-  const _InfoCard({
-    required this.icon,
-    required this.title,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Colors.grey.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF111827),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ModernProfileMenuItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _ModernProfileMenuItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Colors.grey.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: color, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF111827),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.grey.withOpacity(0.5),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LogoutButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _LogoutButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Colors.red.withOpacity(0.05),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Colors.red.withOpacity(0.2),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.logout_rounded,
-                  color: Colors.red,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.red,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-

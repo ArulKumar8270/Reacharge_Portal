@@ -32,21 +32,36 @@ class Product {
   });
   
   factory Product.fromJson(Map<String, dynamic> json) {
+    final cat = json['category'];
+    String categoryId = json['categoryId'] ?? json['category_id'] ?? '';
+    String? categoryName = json['categoryName'] ?? json['category_name'];
+    if (cat is Map) {
+      categoryId = cat['_id'] ?? cat['id'] ?? categoryId;
+      categoryName ??= cat['name'];
+    }
+    final imageList = json['images'] is List
+        ? List<String>.from((json['images'] as List).map((e) => e.toString()))
+        : <String>[];
+    if (imageList.isEmpty && json['image'] != null) {
+      imageList.add(json['image'].toString());
+    }
+    final stock = (json['stock'] ?? 0).toInt();
+    final isActive = json['isActive'] ?? json['is_active'] ?? true;
     return Product(
       id: json['_id'] ?? json['id'],
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
-      discountPrice: json['discountPrice'] != null ? (json['discountPrice'] as num).toDouble() : null,
-      images: List<String>.from(json['images'] ?? []),
-      categoryId: json['categoryId'] ?? json['category_id'] ?? '',
-      categoryName: json['categoryName'] ?? json['category_name'],
-      stock: json['stock'] ?? 0,
+      discountPrice: json['compareAtPrice'] != null ? (json['compareAtPrice'] as num).toDouble() : (json['discountPrice'] != null ? (json['discountPrice'] as num).toDouble() : null),
+      images: imageList,
+      categoryId: categoryId,
+      categoryName: categoryName,
+      stock: stock,
       rating: json['rating'] != null ? (json['rating'] as num).toDouble() : null,
       reviewCount: json['reviewCount'] ?? json['review_count'],
-      specifications: json['specifications'],
-      isAvailable: json['isAvailable'] ?? json['is_available'] ?? true,
-      createdAt: DateTime.parse(json['createdAt'] ?? json['created_at'] ?? DateTime.now().toIso8601String()),
+      specifications: json['specifications'] is Map ? Map<String, dynamic>.from(json['specifications']) : null,
+      isAvailable: isActive && stock >= 0,
+      createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? '') ?? DateTime.now(),
     );
   }
   

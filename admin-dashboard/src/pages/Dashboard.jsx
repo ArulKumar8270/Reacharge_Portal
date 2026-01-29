@@ -5,7 +5,7 @@ import { Users, Package, ShoppingCart, DollarSign } from 'lucide-react'
 export default function Dashboard() {
   const { data: stats, isLoading } = useQuery({
     queryKey: ['dashboardStats'],
-    queryFn: () => reportService.getDashboardStats().then((res) => res.data),
+    queryFn: () => reportService.getDashboardStats().then((res) => res.data?.data || res.data),
   })
 
   const statCards = [

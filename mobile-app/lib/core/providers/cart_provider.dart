@@ -7,7 +7,7 @@ class CartProvider with ChangeNotifier {
   
   List<CartItem> get cartItems => _cartItems;
   int get itemCount => _cartItems.fold(0, (sum, item) => sum + item.quantity);
-  double get totalAmount => _cartItems.fold(0.0, (sum, item) => sum + (item.product.price * item.quantity));
+  double get totalAmount => _cartItems.fold(0.0, (sum, item) => sum + (item.product.finalPrice * item.quantity));
   
   void addToCart(Product product, {int quantity = 1}) {
     final existingIndex = _cartItems.indexWhere((item) => item.product.id == product.id);

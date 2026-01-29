@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.nexus4.nexus4_MI",
+      "sha256_cert_fingerprints": [
+        "B2:4F:AE:26:76:50:22:6C:C6:32:B8:AE:4E:D9:F9:EF:2E:86:E5:15:07:A2:F3:DB:17:6E:1F:A5:69:91:B0:F1"
+      ]
+    }
+  }
+]
+

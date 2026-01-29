@@ -8,6 +8,7 @@ import Categories from './pages/Categories'
 import Orders from './pages/Orders'
 import Transactions from './pages/Transactions'
 import Reports from './pages/Reports'
+import ShopConfig from './pages/ShopConfig'
 import Layout from './components/Layout'
 
 function PrivateRoute({ children }) {
@@ -45,6 +46,7 @@ function App() {
         <Route path="products" element={<Products />} />
         <Route path="categories" element={<Categories />} />
         <Route path="orders" element={<Orders />} />
+        <Route path="shop-config" element={<ShopConfig />} />
         <Route path="transactions" element={<Transactions />} />
         <Route path="reports" element={<Reports />} />
       </Route>

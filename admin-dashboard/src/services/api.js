@@ -2,30 +2,18 @@ import axios from 'axios'
 
 /**
  * API Configuration
- * 
- * Backend API Base URL configuration:
- * - Default: http://localhost:3000/api/v1
- * - Backend PORT is configured in backend/.env (default: 3000 from ENV_CONFIG.txt)
- * - Override with VITE_API_URL environment variable in .env file
- * 
- * Example .env file:
- * VITE_API_URL=http://localhost:3000/api/v1
+ *
+ * - When running on localhost (e.g. localhost:3001), defaults to http://localhost:3000/api/v1
+ * - Otherwise uses VITE_API_URL or production HTTPS URL
+ * - Override with VITE_API_URL in .env (e.g. VITE_API_URL=http://localhost:3000/api/v1)
  */
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1'
+const isLocalhost = typeof window !== 'undefined' && /^localhost$|^127\.0\.0\.1$/.test(window.location?.hostname)
+const API_BASE_URL = import.meta.env.VITE_API_URL || (isLocalhost ? 'http://localhost:10001/api/v1' : 'https://nicknameinfo.net/Reacharge_Portal/api/v1')
 
-// Ensure API URL is HTTP (not HTTPS) for local development to avoid SSL errors
-const normalizedApiUrl = API_BASE_URL.replace(/^https:/, 'http:')
 
-// Log API URL in development
-if (import.meta.env.DEV) {
-  console.log('🔗 API Base URL:', normalizedApiUrl)
-  if (API_BASE_URL !== normalizedApiUrl) {
-    console.warn('⚠️  HTTPS detected in API URL, converted to HTTP:', API_BASE_URL, '→', normalizedApiUrl)
-  }
-}
 
 const api = axios.create({
-  baseURL: normalizedApiUrl,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -61,7 +49,7 @@ api.interceptors.response.use(
       console.error('Error details:', {
         code: error.code,
         message: error.message,
-        apiUrl: normalizedApiUrl,
+        apiUrl: API_BASE_URL,
       })
       return Promise.reject({
         ...error,
@@ -132,6 +120,11 @@ export const reportService = {
   getDashboardStats: () => api.get('/admin/reports/dashboard'),
   getSalesReport: (params) => api.get('/admin/reports/sales', { params }),
   getRevenueReport: (params) => api.get('/admin/reports/revenue', { params }),
+}
+
+export const shopConfigService = {
+  get: () => api.get('/admin/shop-config'),
+  update: (data) => api.put('/admin/shop-config', data),
 }
 
 export default api

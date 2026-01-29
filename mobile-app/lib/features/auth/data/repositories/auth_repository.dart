@@ -67,6 +67,19 @@ class AuthRepository {
       };
     }
   }
+
+  /// PUT /users/profile - update current user profile (name, email, profileImage)
+  Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> data) async {
+    try {
+      final response = await _apiService.put('/users/profile', data: data);
+      return response;
+    } catch (e) {
+      return {
+        'success': false,
+        'message': e.toString().replaceFirst('Exception: ', ''),
+      };
+    }
+  }
   
   Future<Map<String, dynamic>> forgotPassword(String phoneNumber) async {
     try {

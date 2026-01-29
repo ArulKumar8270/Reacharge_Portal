@@ -164,6 +164,27 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Update profile (name, email, profileImage). Returns true on success.
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    _error = null;
+    notifyListeners();
+    try {
+      final response = await _authRepository.updateProfile(data);
+      if (response['success'] == true && response['data'] != null) {
+        _user = UserModel.fromJson(response['data']);
+        notifyListeners();
+        return true;
+      }
+      _error = response['message'] ?? 'Update failed';
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
   
   Future<bool> forgotPassword(String phoneNumber) async {
     _isLoading = true;

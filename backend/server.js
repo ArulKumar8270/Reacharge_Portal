@@ -17,6 +17,7 @@ import rechargeRoutes from './routes/recharge.routes.js';
 import billRoutes from './routes/bill.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import adminRoutes from './routes/admin.routes.js';
+import shopConfigRoutes from './routes/shop-config.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -62,6 +63,7 @@ app.use('/api/v1/recharge', rechargeRoutes);
 app.use('/api/v1/bills', billRoutes);
 app.use('/api/v1/payments', paymentRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/shop-config', shopConfigRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -8,6 +8,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/otp_verification_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
+import '../../features/auth/presentation/pages/address_details_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/ecommerce/presentation/pages/product_list_page.dart';
 import '../../features/ecommerce/presentation/pages/product_detail_page.dart';
@@ -20,6 +21,7 @@ import '../../features/recharge/presentation/pages/recharge_page.dart';
 import '../../features/recharge/presentation/pages/mobile_recharge_page.dart';
 import '../../features/recharge/presentation/pages/dth_recharge_page.dart';
 import '../../features/recharge/presentation/pages/fastag_recharge_page.dart';
+import '../../features/recharge/presentation/pages/all_services_page.dart';
 import '../../features/bills/presentation/pages/bills_page.dart';
 import '../../features/bills/presentation/pages/electricity_bill_page.dart';
 import '../../features/bills/presentation/pages/water_bill_page.dart';
@@ -29,6 +31,7 @@ import '../../features/bills/presentation/pages/insurance_bill_page.dart';
 import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/orders/presentation/pages/order_detail_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/settings_page.dart';
 
 class AppRouter {
   static GoRouter createRouter(AuthProvider authProvider) {
@@ -40,11 +43,12 @@ class AppRouter {
                               state.matchedLocation == '/register' ||
                               state.matchedLocation == '/forgot-password' ||
                               state.matchedLocation == '/reset-password' ||
-                              state.matchedLocation == '/otp-verification';
+                              state.matchedLocation == '/otp-verification' ||
+                              state.matchedLocation == '/address-details';
         final isGoingToProfile = state.matchedLocation == '/profile';
         
-        // Allow profile page to be accessed without login
-        // If not logged in and trying to access protected route (except profile), redirect to login
+        // Allow profile page and address details to be accessed without login
+        // If not logged in and trying to access protected route (except profile and address-details), redirect to login
         if (!isLoggedIn && !isGoingToAuth && !isGoingToProfile) {
           return '/login';
         }
@@ -78,6 +82,10 @@ class AppRouter {
       GoRoute(
         path: '/reset-password',
         builder: (context, state) => const ResetPasswordPage(),
+      ),
+      GoRoute(
+        path: '/address-details',
+        builder: (context, state) => const AddressDetailsPage(),
       ),
       
       // Home
@@ -138,6 +146,10 @@ class AppRouter {
         path: '/recharge/fastag',
         builder: (context, state) => const FastagRechargePage(),
       ),
+      GoRoute(
+        path: '/services',
+        builder: (context, state) => const AllServicesPage(),
+      ),
       
       // Bills Routes
       GoRoute(
@@ -182,6 +194,10 @@ class AppRouter {
       GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsPage(),
       ),
       ],
     );
