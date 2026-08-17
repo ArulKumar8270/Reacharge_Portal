@@ -1,27 +1,27 @@
 import ShopPageConfig from '../models/ShopPageConfig.model.js';
 
 const DEFAULT_CONFIG = {
-  welcomeText: 'Welcome to our store',
+  welcomeText: 'Welcome to ASV Annai Sathya Catering',
   heroBanners: [
-    { title: 'From Our Farm to Your Kitchen.', subtitle: '', imageUrl: '', promoCode: 'Get 5% Off | Use code - NEXUS5', ctaText: 'Try Now', ctaLink: '', order: 0 },
+    { title: 'Authentic Dum Biryani & Catering.', subtitle: '', imageUrl: '', promoCode: 'Get 10% Off | Use code - ASV10', ctaText: 'Order Now', ctaLink: '', order: 0 },
   ],
   features: [
-    { title: 'Wood-Pressed Tradition', iconName: 'agriculture', order: 0 },
-    { title: 'Small-Batch Pressed', iconName: 'water_drop', order: 1 },
-    { title: 'Pure & Unrefined', iconName: 'eco', order: 2 },
-    { title: 'Five-Generation Craft', iconName: 'workspace_premium', order: 3 },
+    { title: 'Fresh ingredients', iconName: 'spa', order: 0 },
+    { title: 'Slow cooked dum', iconName: 'eco', order: 1 },
+    { title: 'Homemade masala', iconName: 'agriculture', order: 2 },
+    { title: 'Event catering', iconName: 'workspace_premium', order: 3 },
   ],
   sections: [
-    { key: 'bestsellers', title: "Bestsellers You'll Love", type: 'latest', limit: 10, order: 0 },
+    { key: 'bestsellers', title: "Today's Specials", type: 'latest', limit: 10, order: 0 },
     { key: 'family_pack', title: 'Family Pack Collection', type: 'latest', limit: 10, order: 1 },
-    { key: 'favourites', title: 'All-Time Favourite Collection', type: 'latest', limit: 8, order: 2 },
+    { key: 'favourites', title: 'All-Time Favourites', type: 'latest', limit: 8, order: 2 },
   ],
   imageStripUrls: [],
   videoUrl: '',
   videoTitle: '',
   reviews: [
-    { authorName: 'Nandan S', authorInitials: 'NS', text: 'We have been using Nexus Wood Pressed Oil and it is exceptionally pure and hygienic. The aroma is natural and pleasant making it perfect for everyday cooking. Highly recommended.', date: 'Jan 15, 2024', rating: 5, order: 0 },
-    { authorName: 'Karthika S', authorInitials: 'KS', text: 'The aroma of their groundnut oils adds a rich flavour to all my dishes. My family loves the taste. Thank you for maintaining such good standards.', date: 'Aug 10, 2023', rating: 5, order: 1 },
+    { authorName: 'Rajesh K', authorInitials: 'RK', text: 'ASV Annai Sathya Catering made our family function perfect. The dum biryani was authentic and everyone loved it.', date: 'Jan 15, 2024', rating: 5, order: 0 },
+    { authorName: 'Karthika S', authorInitials: 'KS', text: 'Excellent catering for our wedding. Fresh, flavourful, and served on time. Highly recommended.', date: 'Aug 10, 2023', rating: 5, order: 1 },
   ],
 };
 
