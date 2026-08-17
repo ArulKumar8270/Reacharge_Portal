@@ -8,7 +8,9 @@ import '../../data/models/cart_item_model.dart';
 import '../../data/models/product_model.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
+  final bool showBackButton;
+
+  const CartPage({super.key, this.showBackButton = true});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,10 @@ class CartPage extends StatelessWidget {
         title: const Text('Cart', style: TextStyle(color: EcommerceTheme.textPrimary, fontWeight: FontWeight.w600)),
         backgroundColor: EcommerceTheme.cream,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(), color: EcommerceTheme.greenDark),
+        automaticallyImplyLeading: showBackButton,
+        leading: showBackButton
+            ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(), color: EcommerceTheme.greenDark)
+            : null,
       ),
       body: Consumer<CartProvider>(
         builder: (context, cart, _) {

@@ -81,7 +81,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Order placed! #${createdOrder.orderNumber}'), backgroundColor: EcommerceTheme.greenLight, behavior: SnackBarBehavior.floating),
       );
-      context.go('/order/${createdOrder.id}');
+      context.push('/order/${createdOrder.id}');
     } catch (e) {
       if (mounted) setState(() {
         _loading = false;
@@ -215,7 +215,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             controller: _pincodeController,
                             decoration: const InputDecoration(labelText: 'Pincode *', border: OutlineInputBorder()),
                             keyboardType: TextInputType.number,
-                            validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty) return 'Required';
+                              if (!RegExp(r'^\d{6}$').hasMatch(v.trim())) return 'Enter a valid 6-digit pincode';
+                              return null;
+                            },
                           ),
                         ],
                       ),

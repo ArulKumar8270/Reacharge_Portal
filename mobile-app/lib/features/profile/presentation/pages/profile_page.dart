@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import '../../../../core/providers/auth_provider.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final bool showBackButton;
+
+  const ProfilePage({super.key, this.showBackButton = true});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -248,10 +250,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Color(0xFF212121)),
-                      onPressed: () => context.pop(),
-                    ),
+                    if (widget.showBackButton)
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Color(0xFF212121)),
+                        onPressed: () => context.pop(),
+                      )
+                    else
+                      const SizedBox(width: 48),
                     const Expanded(
                       child: Text(
                         'Profile',
@@ -295,97 +300,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
-                      // Complete KYC Card
-                      Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF2196F3),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Complete KYC',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF212121),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    const Text(
-                                      'Unlock Unlimited Recharges',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xFF757575),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          'Used ₹0.00',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF757575),
-                                          ),
-                                        ),
-                                        const Text(
-                                          'of ₹10,000.00',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Color(0xFF757575),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: 0.0,
-                                        backgroundColor: Colors.grey[200],
-                                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
-                                        minHeight: 6,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Icon(
-                                Icons.chevron_right,
-                                color: Color(0xFF757575),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
                       
                       // Personal Info Section
                       Card(

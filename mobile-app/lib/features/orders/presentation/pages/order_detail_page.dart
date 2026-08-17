@@ -91,7 +91,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         title: const Text('Order Details', style: TextStyle(color: EcommerceTheme.textPrimary, fontWeight: FontWeight.w600)),
         backgroundColor: EcommerceTheme.cream,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(), color: EcommerceTheme.greenDark),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () {
+          if (Navigator.of(context).canPop()) {
+            context.pop();
+          } else {
+            context.go('/home');
+          }
+        }, color: EcommerceTheme.greenDark),
       ),
       body: _buildBody(),
     );

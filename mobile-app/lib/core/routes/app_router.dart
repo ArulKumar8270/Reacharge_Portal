@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/providers/auth_provider.dart';
+import '../../core/config/app_config.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/otp_verification_page.dart';
@@ -39,26 +40,34 @@ class AppRouter {
       initialLocation: '/login',
       redirect: (context, state) {
         final isLoggedIn = authProvider.isAuthenticated;
-        final isGoingToAuth = state.matchedLocation == '/login' || 
-                              state.matchedLocation == '/register' ||
-                              state.matchedLocation == '/forgot-password' ||
-                              state.matchedLocation == '/reset-password' ||
-                              state.matchedLocation == '/otp-verification' ||
-                              state.matchedLocation == '/address-details';
-        final isGoingToProfile = state.matchedLocation == '/profile';
+        final location = state.matchedLocation;
+        final isGoingToAuth = location == '/login' || 
+                              location == '/register' ||
+                              location == '/forgot-password' ||
+                              location == '/reset-password' ||
+                              location == '/otp-verification' ||
+                              location == '/address-details';
+        final isGoingToProfile = location == '/profile';
+        
+        // Hide recharge/bills flow — redirect to shop
+        if (!AppConfig.enableRechargeFlow &&
+            (location.startsWith('/recharge') ||
+                location.startsWith('/bills') ||
+                location == '/services')) {
+          return '/products';
+        }
         
         // Allow profile page and address details to be accessed without login
-        // If not logged in and trying to access protected route (except profile and address-details), redirect to login
         if (!isLoggedIn && !isGoingToAuth && !isGoingToProfile) {
           return '/login';
         }
         
         // If logged in and trying to access auth pages (except OTP), redirect to home
-        if (isLoggedIn && isGoingToAuth && state.matchedLocation != '/otp-verification') {
+        if (isLoggedIn && isGoingToAuth && location != '/otp-verification') {
           return '/home';
         }
         
-        return null; // No redirect needed
+        return null;
       },
       refreshListenable: authProvider,
       routes: [

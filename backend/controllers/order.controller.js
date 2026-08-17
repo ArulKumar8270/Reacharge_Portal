@@ -54,7 +54,10 @@ export const createOrder = async (req, res) => {
     const tax = 0;
     const total = subtotal + shippingCost + tax;
 
+    const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+
     const order = await Order.create({
+      orderNumber,
       user: userId,
       items: orderItems,
       subtotal,

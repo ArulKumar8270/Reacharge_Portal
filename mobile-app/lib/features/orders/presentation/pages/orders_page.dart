@@ -6,7 +6,9 @@ import '../../../ecommerce/data/models/order_model.dart';
 import '../../../ecommerce/data/repositories/ecommerce_repository.dart';
 
 class OrdersPage extends StatefulWidget {
-  const OrdersPage({super.key});
+  final bool showBackButton;
+
+  const OrdersPage({super.key, this.showBackButton = true});
 
   @override
   State<OrdersPage> createState() => _OrdersPageState();
@@ -71,7 +73,10 @@ class _OrdersPageState extends State<OrdersPage> {
         title: const Text('My Orders', style: TextStyle(color: EcommerceTheme.textPrimary, fontWeight: FontWeight.w600)),
         backgroundColor: EcommerceTheme.cream,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(), color: EcommerceTheme.greenDark),
+        automaticallyImplyLeading: widget.showBackButton,
+        leading: widget.showBackButton
+            ? IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop(), color: EcommerceTheme.greenDark)
+            : null,
         actions: [
           PopupMenuButton<String?>(
             icon: const Icon(Icons.filter_list, color: EcommerceTheme.greenDark),

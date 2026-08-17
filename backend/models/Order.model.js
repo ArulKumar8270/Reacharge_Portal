@@ -72,8 +72,8 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Generate order number before save
-orderSchema.pre('save', async function (next) {
+// Generate order number before validation (pre-save runs after validation)
+orderSchema.pre('validate', async function (next) {
   if (this.isNew && !this.orderNumber) {
     const count = await mongoose.model('Order').countDocuments();
     this.orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${(count + 1).toString().padStart(4, '0')}`;

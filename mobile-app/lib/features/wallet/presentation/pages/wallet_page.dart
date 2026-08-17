@@ -157,16 +157,6 @@ class WalletPage extends StatelessWidget {
                       childAspectRatio: 2.5,
                       children: [
                         _QuickActionButton(
-                          title: 'Recharge',
-                          icon: Icons.phone_android,
-                          onTap: () => context.push('/recharge'),
-                        ),
-                        _QuickActionButton(
-                          title: 'Pay Bills',
-                          icon: Icons.receipt,
-                          onTap: () => context.push('/bills'),
-                        ),
-                        _QuickActionButton(
                           title: 'Shop',
                           icon: Icons.shopping_bag,
                           onTap: () => context.push('/products'),
